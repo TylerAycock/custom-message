@@ -1,13 +1,7 @@
 import { Form, useLoaderData } from "react-router-dom";
-import { getContact } from "../contacts";
 
-export async function loader({ params }) {
-  let { contactId } = params;
-  // console.log(contactId)
-  const contact = await getContact(contactId);
-  // console.log(contact);
-  return contact;
-}
+//this pulls in the function that acts as our get request with the ID param instead of using a fetch in reality
+import { getContact } from "../contacts";
 
 function Contact() {
   let contact = useLoaderData();
@@ -69,6 +63,19 @@ function Contact() {
 }
 
 export default Contact;
+
+//LOADER FUNCTIONS
+
+//Fetch get request using the contactID as param.
+// If you log the data obj you can get the params in this case we pulled the params in directly from the obj and pulled out the contactID
+
+export async function loader({ params }) {
+  // console.log(params);
+  let { contactId } = params;
+  // this is the fetch but in this case we are using dummy backend file
+  const contact = await getContact(contactId);
+  return contact;
+}
 
 function Favorite({ contact }) {
   let favorite = contact.favorite;

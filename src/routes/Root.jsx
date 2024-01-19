@@ -2,12 +2,7 @@ import { Outlet, Link, useLoaderData, Form } from "react-router-dom";
 import { getContacts, createContact } from "../contacts";
 
 
-//this is fetch POST request
-export async function action() {
-  const contact = await createContact();
-  console.log(contact);
-  return contact;
-}
+
 
 function Root() {
   const { contacts } = useLoaderData();
@@ -68,9 +63,18 @@ function Root() {
 
 export default Root;
 
+//Loader and Action Functions
+
 //fetch GET request
 export async function loader() {
   const contacts = await getContacts();
   //   console.log(contacts);
   return { contacts };
+}
+
+//this is fetch POST request
+export async function action() {
+  const contact = await createContact();
+  // console.log(contact);
+  return contact;
 }
