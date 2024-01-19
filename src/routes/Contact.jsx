@@ -1,8 +1,18 @@
-import { Form } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
+import { getContact } from "../contacts";
 
+export async function loader({ params }) {
+  let { contactId } = params;
+  // console.log(contactId)
+  const contact = await getContact(contactId);
+  // console.log(contact);
+  return contact;
+}
 
 function Contact() {
-  let contact = {
+  let contact = useLoaderData();
+
+  let staticContact = {
     first: "Tyler",
     last: "Aycock",
     avatar: "https://placekitten.com/g/200/200",
@@ -14,7 +24,7 @@ function Contact() {
   return (
     <div id="contact">
       <div>
-        <img src={contact.avatar} alt="contact avatar" key={contact.avatar} />
+        <img src={contact.avatar || null} key={contact.avatar} />
       </div>
       <div>
         <h1>
@@ -24,7 +34,7 @@ function Contact() {
             </>
           ) : (
             <i>No Name</i>
-          )}{" "}
+          )}
           <Favorite contact={contact} />
         </h1>
         {contact.github && (

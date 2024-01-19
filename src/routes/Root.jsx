@@ -1,6 +1,17 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLoaderData, Form } from "react-router-dom";
+import { getContacts, createContact } from "../contacts";
+
+
+//this is fetch POST request
+export async function action() {
+  const contact = await createContact();
+  console.log(contact);
+  return contact;
+}
 
 function Root() {
+  const { contacts } = useLoaderData();
+
   return (
     <>
       <div id="sidebar">
@@ -17,19 +28,35 @@ function Root() {
             <div id="search-spinner" aria-hidden hidden={true}></div>
             <div className="sr-only" aria-live="polite"></div>
           </form>
-          <form method="post">
+          <Form method="post">
             <button type="submit">New</button>
-          </form>
+          </Form>
         </div>
         <nav>
-          <ul>
-            <li>
-              <Link to={"/contacts/1"}>Tyler Aycock</Link>
-            </li>
-            <li>
-              <Link to={"/contacts/2"}>Josh Brewin</Link>
-            </li>
-          </ul>
+          {contacts.length ? (
+            <ul>
+              {contacts.map((contact) => {
+                return (
+                  <li key={contact.id}>
+                    <Link to={`contacts/${contact.id}`}>
+                      {contact.first || contact.last ? (
+                        <>
+                          {contact.first} {contact.last}
+                        </>
+                      ) : (
+                        <i>No Name</i>
+                      )}{" "}
+                      {contact.favorite && <span>★</span>}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p>
+              <i>No Contacts</i>
+            </p>
+          )}
         </nav>
       </div>
       <div id="detail">
@@ -40,3 +67,10 @@ function Root() {
 }
 
 export default Root;
+
+//fetch GET request
+export async function loader() {
+  const contacts = await getContacts();
+  //   console.log(contacts);
+  return { contacts };
+}
